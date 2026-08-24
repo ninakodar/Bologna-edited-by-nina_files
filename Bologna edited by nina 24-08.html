@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bologna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2E9D6;
+    --paper-2:#EBE0C7;
+    --cream:#FBF7EC;
+    --ink:#2A2119;
+    --ink-soft:#4A3F33;
+    --wine:#7C2233;
+    --wine-dark:#591824;
+    --wine-tint:#F3DEE2;
+    --gold:#B4872B;
+    --gold-tint:#F1E3BE;
+    --sage:#51603F;
+    --sage-tint:#E4E9D6;
+    --rule:#CBB98E;
+    --rule-soft:#DED2AE;
+    --shadow: 0 6px 18px rgba(42,33,25,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(124,34,51,0.05), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(180,135,43,0.06), transparent 45%);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,h5{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:700;
+    color:var(--wine-dark);
+    letter-spacing:-0.01em;
+    margin:0 0 .3em 0;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:var(--wine);}
+
+  /* ===== HEADER ===== */
+  .masthead{
+    background:linear-gradient(180deg, var(--wine-dark), var(--wine) 85%);
+    color:var(--cream);
+    padding:1.8rem 1.5rem 1.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 14px);
+    pointer-events:none;
+  }
+  .masthead h1{
+    color:var(--cream);
+    font-size:clamp(2rem, 4vw, 3rem);
+    margin:0 0 .4rem 0;
+    font-weight:900;
+    line-height:1.05;
+  }
+  .masthead .datestrip{
+    display:flex;
+    justify-content:center;
+    gap:.5rem;
+    flex-wrap:wrap;
+    margin-top:1rem;
+  }
+  .datepill{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    border:1px solid rgba(251,247,236,0.35);
+    border-radius:999px;
+    padding:.3rem .8rem;
+    color:var(--cream);
+    background:rgba(251,247,236,0.06);
+  }
+
+  /* ===== LAYOUT — linear scrolling document ===== */
+  .wrap{max-width:960px; margin:0 auto; padding:0 1.4rem;}
+
+  .category{
+    padding-top:1.8rem;
+    margin-top:1.8rem;
+    border-top:3px solid var(--ink);
+  }
+  .category:first-of-type{ border-top:none; margin-top:1.4rem; padding-top:0; }
+  .category h2{
+    display:flex; align-items:baseline; gap:.65rem;
+    font-size:clamp(1.5rem,4vw,2.1rem);
+    margin-bottom:.8rem;
+  }
+  .category .catnum{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.8rem;
+    font-weight:500;
+    border:1.5px solid var(--wine);
+    border-radius:4px;
+    padding:.1rem .45rem;
+    color:var(--wine);
+    flex-shrink:0;
+  }
+
+  .subsection{
+    margin-top:1.3rem;
+    padding-top:.9rem;
+    border-top:1px dashed var(--rule);
+  }
+  .subsection:first-of-type{ border-top:none; padding-top:0; margin-top:.5rem; }
+  .subsection h3{
+    font-size:1.2rem;
+    color:var(--wine);
+    display:inline-block;
+    border-bottom:2px solid var(--gold);
+    padding-bottom:.1rem;
+    margin-bottom:.6rem;
+  }
+
+  /* ===== TYPO BLOCKS ===== */
+  .lede{
+    font-family:'Fraunces', serif;
+    font-size:1.1rem;
+    font-style:italic;
+    color:var(--ink-soft);
+    border-left:4px solid var(--gold);
+    padding-left:.9rem;
+    margin:0 0 1rem 0;
+  }
+  .city-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:2.6rem; height:2.6rem;
+    border-radius:50%;
+    border:2px solid var(--wine);
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:.75rem;
+    color:var(--wine);
+    background:var(--cream);
+    flex-shrink:0;
+  }
+  .section-head{
+    display:flex; align-items:center; gap:.8rem;
+    margin:1.3rem 0 .5rem;
+  }
+  .section-head h4{font-size:1.15rem; margin:0;}
+  .section-head:first-child{margin-top:0;}
+
+  .item{
+    background:var(--cream);
+    border:1px solid var(--rule-soft);
+    border-radius:8px;
+    padding:.7rem 1rem;
+    margin-bottom:.55rem;
+    box-shadow:0 2px 6px rgba(42,33,25,0.05);
+  }
+  .item h5{
+    font-size:1.03rem;
+    display:flex;
+    align-items:baseline;
+    gap:.55rem;
+    flex-wrap:wrap;
+    margin-bottom:.3rem;
+  }
+  .item h5 .it{font-style:italic; font-weight:600; color:var(--wine-dark);}
+  .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:.15rem .5rem;
+    border-radius:999px;
+    font-weight:500;
+  }
+  .tag.dop{background:var(--wine-tint); color:var(--wine-dark); border:1px solid var(--wine);}
+  .tag.igp{background:var(--gold-tint); color:#6b5218; border:1px solid var(--gold);}
+  .tag.season{background:var(--sage-tint); color:var(--sage); border:1px solid var(--sage);}
+  .tag.now{background:var(--sage); color:var(--cream);}
+  .item p{margin:.3rem 0;}
+  .item .meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.72rem;
+    color:var(--ink-soft);
+    opacity:.85;
+    margin-top:.4rem;
+    display:flex; gap:1rem; flex-wrap:wrap;
+  }
+
+  /* ===== ITEM CARDS ===== */
+  .item{position:relative;}
+  .item h5{padding-right:2.2rem;}
+
+  .save-status{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    margin-left:.7rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.68rem;
+    color:var(--gold-tint);
+    opacity:.85;
+    vertical-align:middle;
+  }
+  .save-status.error{
+    color:#ffb3b3;
+    font-weight:700;
+    opacity:1;
+  }
+  .retry-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:.65rem;
+    border:1.5px solid #ffb3b3;
+    color:#ffb3b3;
+    background:none;
+    border-radius:4px;
+    padding:.15rem .5rem;
+    cursor:pointer;
+  }
+  .retry-btn:hover{background:#ffb3b3; color:var(--wine-dark);}
+
+  .custom-badge{
+    background:var(--sage);
+    color:var(--cream);
+    font-family:'JetBrains Mono',monospace;
+    font-size:.6rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:.15rem .5rem;
+    border-radius:999px;
+  }
+  .delete-btn{
+    position:absolute;
+    top:.6rem; right:.6rem;
+    width:1.6rem; height:1.6rem;
+    border-radius:50%;
+    border:1.5px solid var(--rule);
+    background:var(--paper);
+    color:var(--ink-soft);
+    font-size:.8rem;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .delete-btn:hover{background:#b33; color:var(--cream); border-color:#b33;}
+
+  .loading-note{font-family:'JetBrains Mono',monospace; font-size: 0.7rem; color:var(--ink-soft); text-align:center; padding:1rem;}
+
+  footer{
+    text-align:center;
+    padding:2rem 1rem 3rem;
+    font-family:'JetBrains Mono',monospace;
+    font-size: 0.7rem;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:640px){
+    .category h2{font-size:1.5rem;}
+    .subsection h3{font-size:1.3rem;}
+  }
+
+  /* ===== PRINT ===== */
+  @media print{
+    body{background:white;}
+    .masthead{
+      background:var(--wine-dark) !important;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+      padding:1rem 1rem .8rem;
+    }
+    .save-status{display:none;}
+    .category{border-top:2px solid var(--ink); break-before:avoid;}
+    .category:first-of-type{break-before:avoid;}
+    .item{break-inside:avoid; box-shadow:none; border:1px solid #ccc;}
+    .delete-btn{display:none;}
+    .tag{border-width:1px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <h1>Bologna</h1>
+  <div class="datestrip">
+    <span class="datepill">SÖN 6/9</span>
+    <span class="datepill">MÅN 7/9</span>
+    <span class="datepill">TIS 8/9</span>
+    <span class="datepill">ONS 9/9</span>
+    <span class="datepill">TORS 10/9</span>
+  </div>
+  <div>
+    <span class="save-status" id="saveStatus"></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ============ MAT ============ -->
+<section class="category" id="cat-mat">
+  <h2><span class="catnum">01</span>Mat</h2>
+  <p class="lede" style="margin-top:0;" data-static-id="mat-overview"><strong>Cucina povera möter cucina di corte:</strong> bondekökets "slösa inget" (chark, buljong, ister) och hovkökens lyx (handkavlad äggpasta, fyllda rätter) vävs ihop än idag: fylld pasta var helgdagsmat, gnocco fritto och polenta var vardagsmat. <strong>Sfoglina-kulturen:</strong> konsten att kavla ägg-pasta pappertunn för hand gick muntligt mor till dotter i generationer, och lever kvar i många kök. <strong>DOP/IGP:</strong> Poslättens gräsmarker gav mjölk för hållbar ost, Apenninernas klimat gav torr luft för skinktorkning. De flesta "lyxprodukterna" här föddes ur praktiska bevarandeproblem, inte finess.</p>
+
+  <article class="subsection">
+    <h3>Bologna</h3>
+    <p class="lede" data-static-id="lede-mat-bologna">Bologna kallas <em>la Grassa</em>, "den feta", och det är inget skämt utan ett hedersnamn. Staden har också smeknamnen <em>la Dotta</em> (den lärda, för Europas äldsta universitet, grundat 1088) och <em>la Rossa</em> (den röda, både för tegeltaken och för politiken).</p>
+    <div class="render-list" data-list="mat-bologna"></div>
+  </article>
+  <article class="subsection">
+    <h3>Parma</h3>
+    <p class="lede" data-static-id="lede-mat-parma">Parma bär sedan 2015 titeln UNESCO Creative City of Gastronomy, och med rätta: här kommer världens mest kopierade ost och världens mest kopierade skinka.</p>
+    <div class="render-list" data-list="mat-parma"></div>
+  </article>
+  <article class="subsection">
+    <h3>Reggio Emilia</h3>
+    <p class="lede" data-static-id="lede-mat-re">Reggio Emilia lever ofta i skuggan av sina mer berömda grannar, men namnet "Parmigiano <strong>Reggiano</strong>" kommer lika mycket härifrån som från Parma, och staden har en egen, mindre exporterad pastatradition.</p>
+    <div class="render-list" data-list="mat-re"></div>
+  </article>
+  <article class="subsection">
+    <h3>Grannregioner</h3>
+    <p class="lede" data-static-id="lede-mat-grannregioner">Rätter från grannregionerna.</p>
+    <div class="render-list" data-list="mat-grannregioner"></div>
+  </article>
+  <article class="subsection">
+    <h3>Säsongens råvaror</h3>
+    <p class="lede" data-static-id="lede-mat-sasong">Tidig september är en övergångstid mellan högsommarens frukt och höstens svamp och rotfrukter.</p>
+    <div class="render-list" data-list="mat-sasong"></div>
+  </article>
+</section>
+
+<!-- ============ VIN ============ -->
+<section class="category" id="cat-vin">
+  <h2><span class="catnum">02</span>Vin</h2>
+
+  <article class="subsection">
+    <h3>Lambrusco</h3>
+    <div class="section-head" style="margin-top:0;"><h4>Vad är Lambrusco egentligen?</h4></div>
+    <p data-static-id="lede-vin-lambrusco-intro">En familj av mörkröda, mousserande viner från lerjordarna runt Modena och Reggio Emilia, inte en enda druva eller stil. Finns från torrt (<em>secco</em>) till sött (<em>dolce</em>), och serveras alltid lätt kylt. Kolsyran och syran gör det till en perfekt motvikt till regionens feta mat, ungefär som ett tungt rödvin inte klarar.</p>
+    <div class="render-list" data-list="vin-lambrusco"></div>
+    <p style="font-size:.9rem; color:var(--ink-soft);">Servera alla varianter lätt kylda (10–13°C), aldrig rumstempererade som ett vanligt rödvin. Det är en del av vad som gör dem så bra ihop med fet mat.</p>
+  </article>
+
+  <article class="subsection">
+    <h3>Vita viner</h3>
+    <p class="lede" data-static-id="lede-vin-vita">Bologna har faktiskt sitt eget vindistrikt, bara ett par mil från stadskärna, och Reggio Emilias kullar gömmer en nästan bortglömd vit druva.</p>
+    <div class="render-list" data-list="vin-vita"></div>
+  </article>
+  <article class="subsection">
+    <h3>Andra lokala druvor</h3>
+    <div class="render-list" data-list="vin-lokala"></div>
+  </article>
+</section>
+
+<!-- ============ EVENEMANG ============ -->
+<section class="category" id="cat-evenemang">
+  <h2><span class="catnum">03</span>Evenemang</h2>
+
+  <article class="subsection">
+    <h3>Bologna</h3>
+    <div class="render-list" data-list="ev-bologna"></div>
+  </article>
+  <article class="subsection">
+    <h3>Parma</h3>
+    <div class="render-list" data-list="ev-parma"></div>
+  </article>
+  <article class="subsection">
+    <h3>Reggio Emilia</h3>
+    <p class="lede" data-static-id="lede-ev-re">Reggio Emilia har färre stora septemberevenemang än sina grannar, men det gör staden desto mer avslappnad att bara promenera runt i.</p>
+    <div class="render-list" data-list="ev-re"></div>
+  </article>
+</section>
+
+<!-- ============ SEVÄRDHETER ============ -->
+<section class="category" id="cat-sevardheter">
+  <h2><span class="catnum">04</span>Sevärdheter</h2>
+
+  <article class="subsection">
+    <h3>Bologna</h3>
+    <p class="lede" data-static-id="lede-sv-bologna">Europas äldsta universitet, ett historiskt center nästan helt täckt av pelargångar, och en stad som gömmer sina bästa vyer bakom oansenliga dörrar.</p>
+    <div class="render-list" data-list="sv-bologna"></div>
+  </article>
+  <article class="subsection">
+    <h3>Parma</h3>
+    <p class="lede" data-static-id="lede-sv-parma">En elegant, nästan fransk stad (Parma styrdes länge av Bourbon-hertiginnan Marie-Louise, Napoleons andra hustru) med två av Italiens mest överraskande teatrar.</p>
+    <div class="render-list" data-list="sv-parma"></div>
+  </article>
+  <article class="subsection">
+    <h3>Reggio Emilia</h3>
+    <p class="lede" data-static-id="lede-sv-re">Den minst turistiska av de fyra städerna, och just därför på många sätt den mest genuina att bara promenera runt i. Här föddes dessutom den italienska trikoloren.</p>
+    <div class="render-list" data-list="sv-re"></div>
+  </article>
+</section>
+
+</div>
+
+<footer>
+  <span data-static-id="footer-text">Källor: kommunala turistbyråer (Bologna Welcome, VisitModena, Parma Welcome, Comune di Reggio Emilia), konsortier för DOP/IGP-produkter, Wikipedia, samt regionala nyhets- och evenemangssajter</span>
+</footer>
+
+<script>
+  /* ============================================================
+     DATA — filled below by DATA["key"] = {groups:[{title,items:[...]}]}
+     Each item: {id, name, link, tags:[{label,cls}], body, meta, variant}
+     variant "callout" | "callout gold" | "callout sage" renders as callout;
+     otherwise renders as a normal .item card.
+  ============================================================ */
+  const DATA = {};
+
+  DATA['mat-bologna'] = { groups: [
+    { title: "Fylld pasta &amp; buljongkultur", items: [
+      { id:'mat-bo-tortellini', name:'Tortellini in brodo', tags:[],
+        body:`<p>Bolognas mest ikoniska rätt: små, ringformade pastabuntar fyllda med en blandning av fläskkarré, prosciutto, mortadella, Parmigiano Reggiano, ägg och muskotnöt, traditionellt kokta och serverade i klar kapunbuljong. Legenden säger att en värdshusvärd av misstag såg genom nyckelhålet in i ett rum där gudinnan Venus (eller en resande dam) klädde av sig, och att han bara hann se hennes navel innan han, hänförd, formade pastan efter det han sett. Receptet deponerades formellt hos Bolognas handelskammare 7 december 1974 av Dotta Confraternita del Tortellino.</p>`,
+        meta:'🍽️ Helgdagsmat, särskilt jul &amp; nyår · 👵 Görs för hand av sfogline' },
+      { id:'mat-bo-tortelloni', name:'Tortelloni',  tags:[],
+        body:`<p>Fylld med ricotta och spenat istället för kött. Historiskt fastemat, under katolska fasteperioder var kött förbjudet, och den köttlösa fyllningen gjorde tortelloni till en praktisk lösning för att ändå äta något festligt. Serveras <em>asciutti</em>, med smör och salvia, aldrig i buljong.</p>` },
+      { id:'mat-bo-ragu', name:'Tagliatelle al ragù',  tags:[],
+        body:`<p>Den äkta <em>ragù alla bolognese</em> registrerades 1982 hos Camera di Commercio: finhackat nötkött, soffritto av lök/morot/selleri, tomatkoncentrat, mjölk eller grädde, vin, timmar av sjudning. Serverat på breda äggtagliatelle.</p>` },
+      { id:'mat-bo-lasagne', name:'Lasagne alla bolognese',  tags:[],
+        body:`<p>Pastaplattor varvade med ragù, béchamel och Parmigiano, gratinerade i ugn.</p>` }
+    ]},
+    { title: "Salumi", items: [
+      { id:'mat-bo-mortadella', name:'Mortadella',  tags:[{label:'IGP',cls:'igp'}],
+        body:`<p>Slät, rosa charkuterivara av finmalet griskött med inbakade vita fettkuber och ofta pistagenötter. Anor från romartiden, fick modern form under renässansen, var länge en aristokratisk delikatess innan den blev vardagsmat.</p>`,
+         }
+    ]},
+    { title: "Cucina povera", items: [
+      { id:'mat-bo-friggione', name:'Friggione',  tags:[],
+        body:`<p>En seg, sötsyrlig gryta av mycket långsamt stekt vit lök och tomat. Belagd sedan 1886, receptdeponerad 2004.</p>` },
+      { id:'mat-bo-trippa', name:'Trippa alla bolognese',  tags:[],
+        body:`<p>Komage (våmme) stuvad med tomat, vitt vin och Parmigiano. En klassisk "nose to tail"-rätt från en tid då inget slaktavfall kastades. Serveras ofta med bönor (trippa e fagioli) och äts fortfarande regelbundet på genuina bolognesiska trattorior, sällan på turistmenyer.</p>` },
+      { id:'mat-bo-balsamico', name:'Aceto Balsamico Tradizionale di Modena',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p><strong>Aceto Balsamico Tradizionale di Modena DOP</strong> görs enbart av kokt druvmust från Trebbiano-druvor och åldras i fatbatterier av olika träslag: körsbär, ek, kastanj, mullbär, enbär, i minst 12 (<em>affinato</em>) eller 25 år (<em>extravecchio</em>). Historien går till år 1046, då en fatolja med balsamvinäger ska ha skänkts till blivande kejsar Henrik II. Samma bevarandeprincip som resten av den här gruppens rätter, fast tillämpad på druvmust istället för slaktrester.</p>`,
+        meta:'🏛️ Konsortiet firar 60 år 2026 · 🍦 Extravecchio äts droppvis på glass eller Parmigiano' }
+    ]},
+    { title: "Söta hörnet", items: [
+      { id:'mat-bo-nocino', name:'Nocino (Modena)',  tags:[],
+        body:`<p>Mörk, kryddig likör på omogna gröna valnötter, plockade runt 24 juni och lagda i sprit i minst 40 dagar. Serveras som avec.</p>` },
+      { id:'mat-bo-tortabarozzi', name:'Torta Barozzi (Modena området)',  tags:[],
+        body:`<p>En tät, mörk chokladkaka från Vignola (Modenas provins), hemlighållet original­recept sedan 1907 (endast konditoriet Gollini känner den exakta blandningen). Innehåller bland annat kaffe och rom.</p>` },
+      { id:'mat-bo-amaretti', name:'Amaretti di Modena',  tags:[],
+        body:`<p>Mandelbiskvier, ofta mjukare i konsistensen än de knapriga nordliga versionerna.</p>` }
+    ]},
+    { title: "Gatumat", items: [
+      { id:'mat-bo-piadina', name:'Piadina',  tags:[],
+        body:`<p>Strängt taget hör piadina hemma i Romagna snarare än i Emilia, men den säljs på gatustånd i hela regionen, Bologna inräknat. Tunt, osyrat vetebröd stekt på plåt, fyllt med allt från squacquerone till prosciutto, snabb lunch i handen.</p>` },
+      { id:'mat-bo-gelato', name:'Gelato',  tags:[],
+        body:`<p>Leta efter "gelato artigianale". Riktig gelato ser oftast lite matt och naturfärgad ut. Finns förstås överallt, men Bolognas universitetstäta gatunät har ett särskilt tätt utbud.</p>` },
+      { id:'mat-bo-borlenghi', name:'Borlenghi (Modena området)',  tags:[],
+        body:`<p>En knappt känd skatt från Apenninbyarna: extremt tunna, krispiga crêpe-liknande flatbröd, gräddade på en stor rund platta och genast bestrukna med <em>cunza</em> (flottfett, vitlök, rosmarin) innan de rullas ihop. Så pass lokalt att en hel by, Zocca (även känt som Vasco Rossis hemstad), har ett museum tillägnat rätten.</p>` }
+    ]}
+  ]};
+
+  DATA['mat-parma'] = { groups: [
+    { title: "Parmigiano Reggiano", items: [
+      { id:'mat-pa-parmigiano', name:'Parmigiano Reggiano',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>Ursprunget spåras till benediktinska och cisterciensiska munkar runt Parma och Reggio Emilia på 1200-talet. Tillverkas enligt strikta regler: enbart råmjölk, naturliga vallar, inga tillsatser, kopparkittlar, minst 12 månaders lagring.</p>`,
+        meta:'🧀 Yngre (12–18 mån) mildare, äldre (30+ mån) mer smulig och salt' }
+    ]},
+    { title: "Charkuteri från Parmas kullar", items: [
+      { id:'mat-pa-prosciutto', name:'Prosciutto di Parma',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>Langhirano-områdets mikroklimat: sval, torr luft från både berg och hav, gör den minst tolv månader långa lufttorkningen möjlig.</p>` },
+      { id:'mat-pa-culatello', name:'Culatello di Zibello',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>Görs enbart av den bästa muskelbiten från grisens lår, bunden i blåsa eller tarm, lagrad minst 12–14 månader i fuktiga källare i Poflodens dimmiga lågland kring Zibello. Historiskt en aristokratisk delikatess på grund av det förlustrika tillverkningssättet.</p>` },
+      { id:'mat-pa-coppa', name:'Coppa di Parma',  tags:[{label:'IGP',cls:'igp'}],
+        body:`<p>Torkad, kryddad griskotlettrad (nacke), mildare och fetare i smaken än salame.</p>` },
+      { id:'mat-pa-felino', name:'Salame di Felino',  tags:[{label:'IGP',cls:'igp'}],
+        body:`<p>Milt, löst packat salame från kullarna kring Felino, känt för sin mjuka konsistens och avsaknad av vitlök i vissa recept.</p>` },
+      { id:'mat-pa-spalla', name:'Spalla Cotta di San Secondo',  tags:[],
+        body:`<p>Kokt, saltad och kryddad grisbog från San Secondo Parmense. Sällan sedd utanför provinsen.</p>` }
+    ]},
+    { title: "Fylld pasta", items: [
+      { id:'mat-pa-anolini', name:'Anolini in brodo',  tags:[],
+        body:`<p>Parmas svar på tortellini: runda, fyllda med <em>stracotto</em> (långkokt nötkött, brödsmulor, Parmigiano) snarare än rått kött. Serveras i kapunbuljong, klassisk jul- och nyårsrätt.</p>` }
+    ]},
+  ]};
+
+
+  DATA['mat-re'] = { groups: [
+    { title: "Erbazzone — stadens signaturrätt", items: [
+      { id:'mat-re-erbazzone', name:'Erbazzone (Scarpazzone)',  tags:[],
+        body:`<p>En rustik, salt paj i två lager tunn mördeg (traditionellt med ister) fylld med mangold eller spenat, Parmigiano, lök och ibland pancetta. Namnet "scarpazzone" kommer av <em>scarpa</em>, mangoldens vita stjälk som fattiga bondefamiljer också använde för att inte slösa. Säljs i bageri.</p>` }
+    ]},
+    { title: "Fylld pasta", items: [
+      { id:'mat-re-cappelletti', name:'Cappelletti ("små hattar")',  tags:[],
+        body:`<p>Reggios och angränsande Modenas svar på tortellini/anolini-familjen: något större, formade som hattar, fyllda med fläsk, Parmigiano, ägg och muskot (utan mortadella). Serveras klassiskt i kapunbuljong till jul och nyår.</p>` }
+    ]},
+    { title: "Parmigiano Reggiano i Reggio-provinsen", items: [
+      { id:'mat-re-caseifici', name:'Parmigiano Reggiano',  tags:[],
+        body:`<p>En stor andel av all Parmigiano Reggiano produceras i Reggio Emilias provins, särskilt i höglandet mot Apenninerna ("di montagna", ofta ansedd extra fyllig då korna betar naturligt gräs).</p>` }
+    ]},
+  ]};
+
+  DATA['mat-grannregioner'] = { groups: [
+    { title: "", items: [
+      { id:'mat-nr-olivascolana', name:"Olive all'ascolana (Marche)",  tags:[],
+        body:`<p>Friterade gröna oliver fyllda med köttfärs, uppfunna i Ascoli Piceno runt år 1800 av privatkockar som ville använda upp köttrester från fester på förmögna gårdar. Klassisk aptitretare till aperitivo eller sålda i papperskonor på festivaler.</p>` },
+      { id:'mat-nr-tiramisu', name:'Tiramisù (Veneto)',  tags:[],
+        body:`<p>Spåras till Treviso i Veneto på 1960–70-talet. Mascarpone, ägg, kaffedoppade savoiardikex och kakao.</p>` },
+      { id:'mat-nr-squacquerone', name:'Squacquerone di Romagna',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>En mjuk, krämig, nästan rinnande färskost utan skorpa från Romagna, gjord på komjölk och konsumerad inom några dagar (går inte att lagra). En av Italiens mest omtyckta bordsostar.</p>` }
+    ]},
+    { title: "Sydtyrol", items: [
+      { id:'mat-nr-puzzone', name:'Puzzone di Moena',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>En kraftfullt doftande tvättskorpsost från Val di Fassa/Fiemme/Primiero i Trentino, även kallad Spretz Tzaorì på ladinska ("smakrik ost"). Formarna tvättas varje vecka med ljummet saltvatten under lagringen, vilket ger den karaktäristiska starka doften och en mild, lätt beskt eftersmak.</p>` },
+      { id:'mat-nr-stelvio', name:'Stelvio / Stilfser',  tags:[{label:'DOP',cls:'dop'}],
+        body:`<p>Halvhård tvättskorpsost från Bolzano-provinsen, DOP sedan 2007. Produktionsområdet inkluderar bland annat kommunen Ortisei.</p>` },
+      { id:'mat-nr-crucolo', name:'Crucolo',  tags:[],
+        body:`<p>Ett känt Trentino-mejerivarumärke, halvhård alpost lagrad i grottor.</p>` },
+      { id:'mat-nr-vezzena', name:'Vezzena',  tags:[],
+        body:`<p>En av Trentinos äldsta ostar, från högplatån Vezzena mellan Trentino och Vicenza. Gjord enbart på sommarens alpbetesmjölk, med en lätt besk, smörig karaktär. Den var kejsar Frans Josefs favoritost.</p>` },
+      { id:'mat-nr-fontal', name:'Fontal',  tags:[],
+        body:`<p>En mild, halvmjuk bordsost i Fontina-stil, inte ursprungligen från Trentino/Sydtyrol men vanlig i mejerier där.</p>` },
+      { id:'mat-nr-speck', name:'Speck Alto Adige',  tags:[{label:'IGP',cls:'igp'}],
+        body:`<p>Sydtyrols signaturchark: lätt rökt och lufttorkad skinka, en hybrid mellan medelhavets lufttorkning och norra Europas rökningstradition. Till skillnad från prosciutto är speck rökt, det är den avgörande skillnaden.</p>` }
+    ]}
+  ]};
+
+  DATA['mat-sasong'] = { groups: [
+    { title: "I säsong just nu", items: [
+      { id:'mat-sa-fikon', name:'Fikon',  tags:[{label:'säsong',cls:'now'}],
+        body:`<p>Sensommarens fikon är på topp i början av september, sålda löst på alla marknader.</p>` },
+      { id:'mat-sa-druvor', name:'Vindruvor & vendemmia',  tags:[{label:'säsong',cls:'now'}],
+        body:`<p>Skörden av druvor till bland annat Lambrusco inleds normalt i just september. Vingårdar öppnar för besök.</p>` },
+      { id:'mat-sa-plommon', name:'Plommon (susine)',  tags:[{label:'säsong',cls:'now'}],
+        body:`<p>Sensommarens plommonsorter, som Regina Claudia, är fortfarande på gång i början av september.</p>` },
+      { id:'mat-sa-paron', name:'Päron',  tags:[{label:'IGP',cls:'igp'},{label:'säsong',cls:'now'}],
+        body:`<p>Emilia-Romagna är Italiens främsta päronregion, sorter som Abate Fetel och William skördas i augusti–september.</p>` },
+      { id:'mat-sa-persikor', name:'Persikor & nektariner',  tags:[{label:'svansen av säsong',cls:'now'}],
+        body:`<p>Säsongen klingar av men håller i sig i tidig september, särskilt de senare sorterna.</p>` },
+      { id:'mat-sa-porcini', name:'Porcini-svamp',  tags:[{label:'säsongen inleds',cls:'now'}],
+        body:`<p>Efter höstens första regn börjar den stora porcini-säsongen i Apenninerna. Svampfester senare i september.</p>` },
+      { id:'mat-sa-tomater', name:'Tomater & "la conserva"',  tags:[],
+        body:`<p>Sensommarens sista stora tomatskörd är den tid många familjer lägger in årets tomatsås (<em>la conserva</em>) för vintern. Ett husligt ritual snarare än publik aktivitet.</p>` },
+      { id:'mat-sa-zucca', name:'Zucca (pumpa/squash)',  tags:[{label:'tidig säsong',cls:'now'}],
+        body:`<p>De första pumporna dyker upp redan i september, huvudsäsongen och pumpafester ligger några veckor senare.</p>` }
+    ]},
+  ]};
+
+
+  DATA['vin-lambrusco'] = { groups: [
+    { title: "De fem huvudtyperna", items: [
+      { id:'vin-la-sorbara', name:'Lambrusco di Sorbara',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Den ljusaste och mest delikata av alla Lambrusco-typer, nästan rosé-aktig i glaset, med hög syra och en karakteristisk doft av violer. Odlas norr om Modena, kring byn Sorbara. Ofta ansedd den mest "eleganta" Lambrusco-stilen bland sommelierer.</p>` },
+      { id:'vin-la-grasparossa', name:'Lambrusco Grasparossa di Castelvetro',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Den mörkaste, mest fylliga och tanninrika Lambrusco-typen, odlad i kullarna kring Castelvetro di Modena. Namnet ("grov röd") syftar på stjälkarnas röda färg på hösten.</p>` },
+      { id:'vin-la-salamino', name:'Lambrusco Salamino di Santa Croce',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Medelfyllig och fruktig, uppkallad efter druvklasens korvliknande ("salamino") form. Odlas kring Carpi, norr om Modena.</p>` },
+      { id:'vin-la-reggiano', name:'Lambrusco Reggiano',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>En bredare DOC-beteckning för Lambrusco odlad i Reggio Emilias provins, med flera lokala druvsorter tillåtna (Marani, Salamino, Montericco) och bred stilmässig variation från lätt och fruktig till mer strukturerad.</p>` },
+      { id:'vin-la-modena', name:'Lambrusco di Modena',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>En nyare, bredare DOC (2009) som täcker hela Modena-provinsen och tillåter blandningar av flera Lambrusco-druvor i samma flaska. Den vanligaste typen att stöta på i vanlig matbutik, mellan de mer prestigefyllda enskilda zonerna.</p>` }
+    ]}
+  ]};
+
+  DATA['vin-vita'] = { groups: [
+    { title: "", items: [
+      { id:'vin-vi-pignoletto', name:'Pignoletto',  tags:[{label:'DOCG',cls:'dop'}],
+        body:`<p>Bolognas eget vita vin, gjort på Grechetto Gentile-druvan, odlad i kullarna sydväst om staden (Colli Bolognesi). Finns som frizzante, spumante eller helt stilla, och har seglat upp som ett lokalt, prisvärt alternativ till Prosecco. En Pignoletto spumante fungerar utmärkt till aperitivo med mortadella och Parmigiano.</p>` },
+      { id:'vin-vi-malvasia', name:"Malvasia dell'Emilia",  tags:[{label:'IGT',cls:'igp'}],
+        body:`<p>Aromatisk, ofta halvtorr till halvsöt vit vindruva som ger parfymerade, blomstriga viner. En lokal vitvinstradition som sällan syns utanför regionen.</p>` },
+      { id:'vin-vi-spergola', name:'Spergola',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>En nästan bortglömd, ursprungligen inhemsk vit druva från kullarna kring Scandiano och Canossa i Reggio Emilias provins, troligen släkt med Sauvignon-familjen. Länge nedprioriterad, men har fått en renässans bland små producenter senaste 10–15 åren.</p>` }
+    ]}
+  ]};
+
+  DATA['vin-lokala'] = { groups: [
+    { title: "", items: [
+      { id:'vin-lo-barbera', name:'Barbera dei Colli Bolognesi',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Piemontes berömda druva i en lokal tolkning: frisk syra, mörka bär, ofta lite lättare och mer vardaglig i stil än sina piemontesiska kusiner. En av Colli Bolognesis mest odlade röda druvor, ett naturligt val till friggione.</p>` },
+      { id:'vin-lo-cabernet', name:'Cabernet Sauvignon & Merlot dei Colli Bolognesi',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Cabernet Sauvignon och Merlot planterades här redan under 1900-talet. Ger strukturerade, medelfylliga rödviner.</p>` },
+      { id:'vin-lo-sangiovese', name:'Sangiovese di Romagna',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Ligger österut, mot Romagna/Ravenna. Ett strukturerat, tanninrikt rödvin, motsatsen till Lambruscos lätta bubbel.</p>` },
+      { id:'vin-lo-gutturnio', name:'Gutturnio (Piacenza)',  tags:[{label:'DOC',cls:'dop'}],
+        body:`<p>Ligger mot väster, i Piacenza-trakten. En Barbera–Bonarda-blend, fruktig och lättdrucken, ofta något pärlande.</p>` }
+    ]},
+  ]};
+  DATA['ev-bologna'] = { groups: [
+    { title: "Evenemang", items: [
+      { id:'ev-bolognaestate', name:'Bologna Estate 2026',  tags:[],
+        body:`<p>Brett paraplyprogram. Friluftsbio i Parco della Montagnola och vid Casa Bond.</p>`,
+        meta:'📅 15/5–27/9, 💶 Mestadels gratis' },
+      { id:'ev-pignoletto-tasting', name:'Mostra Assaggio Vini Colli Bolognesi',  tags:[],
+        body:`<p>Vinprovning där producenter från Bolognas eget vindistrikt ställer upp med Pignoletto för direkt provning och samtal med vinmakarna.</p>`,
+        meta:'📅 Onsdag 9/9, 17.30–21.30 📍 Mercato Ritrovato (Via Azzo Gardino 65), 💶 Gratis-ish' }
+    ]},
+    { title: "Marknader", items: [
+      { id:'mk-bo-mezzo', name:'Mercato di Mezzo (Quadrilatero)',  tags:[],
+        body:`<p>Bolognas historiska matkvarter, med gator uppkallade efter medeltida skrån (Drapperie, Pescherie Vecchie, Caprarie). Mathall med bardiskar, ostbutiker och charkuterier.</p>`,
+        meta:'📅 Stängt måndagar, öppet ca 9–23/24' },
+      { id:'mk-bo-erbe', name:'Mercato delle Erbe',  tags:[],
+        body:`<p>En annan historisk mathall, mer lokalt inriktad på vardagshandel.</p>`,
+        meta:'📅 måndag–lördag, 7–19.30'
+      }
+    ]},
+    { title: "Vinylskivor", items: [
+      { id:'mk-vi-discodoro', name:"Disco D'Oro",  tags:[{label:'Sedan 1976',cls:'season'}],
+        body:`<p>Via Galliera 13. Stadens mest legendariska skivbutik — en samlingspunkt för punk och new wave-scenen sedan 70-talet, besökt av lokala kändisar som Andrea Pazienza och bandet Skiantos. Stort utbud av begagnat inom rock, jazz och underground/import.</p>` },
+      { id:'mk-vi-semm', name:'SEMM Music Store & More',  tags:[],
+        body:`<p>Via Oberdan 24F. Öppnade 2009 nära universitetet, brett sortiment av nytt och begagnat till bra priser, en av de mest välrecenserade butikerna i stan idag.</p>` }
+        
+      ]}
+  ]};
+
+  DATA['ev-parma'] = { groups: [
+    { title: "Marknader", items: [
+      { id:'mk-pa-ghiaia', name:'Piazza Ghiaia — Fiera del Vintage / Antiquariato',  tags:[],
+        body:`<p> Under Piazza Ghiaias glastak — Parmas enda fasta veckovisa loppis/vintagemarknad, med över 60 utställare av antikviteter, vintagekläder, vinylskivor och parfymer. Det bästa enskilda marknadstillfället för att kombinera antikt, vintage <em>och</em> vinyl.</p>`,
+        meta:'📅 Tisdag 8/9, 9–19' },
+      { id:'mk-pa-pace', name:'Piazza della Pace — MercaTiAmo',  tags:[],
+        body:`<p>En lokalproducent-/närproducerad marknad på Piazzale della Pace, mitt i city intill Palazzo della Pilotta. Grönsaker, ost, chark och annat direkt från gårdar i trakten.</p>`,
+        meta:'📅 Tisdag 8/9, 8-13 ' }
+    ]}
+  ]};
+
+  DATA['ev-re'] = { groups: [
+    { title: "Evenemang", items: [
+      { id:'ev-re-restate', name:'Restate 2026',  tags:[],
+        body:`<p>Reggio Emilias eget sommarprogram, med kulturarrangemang, musik och aktiviteter juni–september utspridda över stadens parker och torg.</p>`,
+        meta:'📅 juni-september' }
+    ]},
+  ]};
+
+  DATA['sv-bologna'] = { groups: [
+    { title: "De stora", items: [
+      { id:'sv-bo-piazzamaggiore', name:'Piazza Maggiore & Fontana del Nettuno',  tags:[],
+        body:`<p>Stadens hjärta sedan medeltiden, omgärdat av Palazzo d'Accursio, Palazzo del Podestà och San Petronio-basilikan. Neptunusfontänen (1566, av Giambologna) är en av Italiens mest kända manieristiska skulpturer.</p>` },
+      { id:'sv-bo-sanpetronio', name:'Basilica di San Petronio',  tags:[],
+        body:`<p>En av världens största kyrkor byggd av tegel, med en anmärkningsvärt ofullständig, ojämn fasad (marmor bara på nedre halvan).</p>` },
+      { id:'sv-bo-duetorri', name:'Le Due Torri (Asinelli & Garisenda)',  tags:[],
+        body:`<p>Stadens symbol: två lutande medeltida torn (av ursprungligen över hundra).</p>` },
+      { id:'sv-bo-sanluca', name:'Portico di San Luca',  tags:[],
+        body:`<p>Världens längsta sammanhängande pelargång: 3,8 km och 666 valv upp till Santuario della Madonna di San Luca. Vidsträckt utsikt över Poslätten från toppen.</p>` },
+      { id:'sv-bo-santostefano', name:'Quartiere Santo Stefano — Sju kyrkor',  tags:[],
+        body:`<p>Ett sammanhängande komplex av fyra (historiskt sju) sammanbyggda kyrkor med en fridfull inre klostergård.</p>` }
+    ]},
+    { title: "Museer", items: [
+      { id:'sv-bo-pepoli', name:'Museo della Storia di Bologna, Palazzo Pepoli',  tags:[],
+        body:`<p>Ett modernt, multimedialt museum om stadens 3 000-åriga historia i ett renässanspalats.</p>` }
+    ]},
+    { title: "Gömda pärlor", items: [
+      { id:'sv-bo-finestrella', name:'Finestrella di Via Piella',  tags:[],
+        body:`<p>En liten, lätt missad fönsteröppning i en husvägg som ger utsikt över en av Bolognas dolda medeltida kanaler. De flesta av stadens vattenvägar täcktes över under 1900-talet, men här kan man fortfarande se "lilla Venedig".</p>` },
+      { id:'sv-bo-santamariavita', name:'Santa Maria della Vita — Compianto sul Cristo Morto',  tags:[],
+        body:`<p>Inuti en annars anspråkslös kyrka gömmer sig en av 1400-talets mest känslomässigt chockerande skulpturgrupper: sju terrakottafigurer i naturlig storlek av Niccolò dell'Arca som sörjer Kristi död, ansiktena förvridna i skrik. Ett av stadens starkaste konstupplevelser.</p>` }
+    ]},
+    { title: "Parker &amp; utomhus", items: [
+      { id:'sv-bo-giardini', name:'Giardini Margherita & Certosa di Bologna',  tags:[],
+        body:`<p>Giardini Margherita är stadens stora engelska park. Certosa di Bologna, den monumentala kyrkogården strax utanför centrum. Arkader fyllda med utsmyckade 1800-talsgravmonument, ett friluftsmuseum över italiensk skulptur.</p>` }
+    ]}
+  ]};
+
+  DATA['sv-parma'] = { groups: [
+    { title: "Historiska", items: [
+      { id:'sv-pa-duomo', name:'Duomo & Battistero di Parma',  tags:[],
+        body:`<p>Katedralen rymmer Correggios svindlande kupolfresk "Jungfruns himmelsfärd" (1526–30). Det åttkantiga baptisteriet bredvid, klätt i rosa Veronamarmor, har skulpturer av Benedetto Antelami.</p>` },
+      { id:'sv-pa-pilotta', name:'Palazzo della Pilotta & Teatro Farnese',  tags:[],
+        body:`<p>Ett enormt hovbyggnadskomplex: Galleria Nazionale, arkeologiska museet, och — mest spektakulärt — Teatro Farnese (1618), en helt trähuggen barockteater byggd för en enda hertiglig bröllopsfest.</p>` }
+    ]},
+    { title: "Parker", items: [
+      { id:'sv-pa-parcoducale', name:'Parco Ducale',  tags:[],
+        body:`<p>Den hertigliga parken tvärs över floden från centrum, med formella franska trädgårdar framför Palazzo Ducale.</p>` },
+      { id:'sv-pa-cittadella', name:'Cittadella di Parma',  tags:[],
+        body:`<p>En stjärnformad 1500-talsfästning omvandlad till en stor, lummig stadspark.</p>` }
+    ]}
+  ]};
+
+  DATA['sv-re'] = { groups: [
+    { title: "Historiska", items: [
+      { id:'sv-re-prampolini', name:'Piazza Prampolini & Duomo',  tags:[],
+        body:`<p>Stadens huvudtorg, omgärdat av katedralen (ovanlig, ofullbordad fasad) och Palazzo del Municipio. Piazza San Prospero, mer intim, ligger bara steg bort.</p>` },
+      { id:'sv-re-ghiara', name:'Basilica della Beata Vergine della Ghiara',  tags:[],
+        body:`<p>En barockkyrka vars insida är fullständigt täckt av fresker och guldornament. Betydligt mindre trafikerad av turister än motsvarigheter i Bologna eller Parma.</p>` },
+      { id:'sv-re-sanprospero', name:'Chiesa di San Prospero',  tags:[],
+        body:`<p>Uppkallad efter stadens skyddshelgon, med sex stiliserade marmorlejon vaktande trappan upp till entrén. Den mindre, mysigare av stadens två huvudtorg.</p>` }
+    ]},
+    { title: "Parker", items: [
+      { id:'sv-re-popolo', name:'Parco del Popolo & Mauriziano',  tags:[],
+        body:`<p>Stadens stora park, anlagd på en gammal fästningsplats, med Mauriziano-villan där renässanspoeten Ludovico Ariosto en gång bodde.</p>` }
+    ]}
+  ]};
+
+
+  /* ============================================================
+     PERSISTENT STORAGE — ONE consolidated key for everything.
+     Anthropic's storage API is rate-limited; five separate keys each
+     firing their own network call on every click risked exactly the
+     "storage set failed / internal server error" you ran into. Now
+     every kind of edit (dismiss, add, delete, text edit, reorder)
+     just updates the in-memory objects below, and a single debounced,
+     auto-retrying function writes them all out together.
+  ============================================================ */
+  let customItems = {};
+  let itemOverrides = {};
+  let itemOrder = {};
+  let staticOverrides = {};
+
+  let saveTimer = null;
+  let saveToken = 0;
+
+  function setSaveStatus(status){
+    const el = document.getElementById('saveStatus');
+    if(!el) return;
+    clearTimeout(el._hideTimer);
+    el.className = 'save-status ' + status;
+    el.innerHTML = status==='saving' ? 'Sparar…'
+      : status==='saved' ? 'Sparat ✓'
+      : status==='error' ? '⚠ Kunde inte spara <button type="button" id="retrySaveBtn" class="retry-btn">Försök igen</button>'
+      : '';
+    if(status==='saved'){
+      el._hideTimer = setTimeout(()=>{ el.textContent=''; el.className='save-status'; }, 2500);
+    }
+  }
+
+  // Debounced: rapid edits in quick succession collapse into one write instead of many.
+  function scheduleSave(){
+    clearTimeout(saveTimer);
+    saveToken++;
+    setSaveStatus('saving');
+    const myToken = saveToken;
+    saveTimer = setTimeout(()=> attemptSave(myToken), 500);
+  }
+
+  async function attemptSave(myToken){
+    const delays = [0, 1000, 2500, 5000]; // a few retries with backoff before giving up
+    for(let i=0; i<delays.length; i++){
+      if(myToken !== saveToken) return; // a newer edit superseded this save — bail, the newer one will finish the job
+      if(delays[i]) await new Promise(r=>setTimeout(r, delays[i]));
+      if(myToken !== saveToken) return;
+      // Re-serialize fresh each attempt, never a stale snapshot from before the wait.
+      const payload = JSON.stringify({ customItems, itemOverrides, itemOrder, staticOverrides });
+      try{
+        await window.storage.set('book-state', payload, false);
+        if(myToken === saveToken) setSaveStatus('saved');
+        return;
+      }catch(e){
+        console.error('Sparförsök ' + (i+1) + ' misslyckades:', e);
+      }
+    }
+    if(myToken === saveToken) setSaveStatus('error');
+  }
+
+  async function loadState(){
+    try{
+      const res = await window.storage.get('book-state', false);
+      if(res && res.value){
+        const s = JSON.parse(res.value);
+        customItems = s.customItems || {};
+        itemOverrides = s.itemOverrides || {};
+        itemOrder = s.itemOrder || {};
+        staticOverrides = s.staticOverrides || {};
+      }
+    }catch(e){
+      // no saved state yet (first visit) — perfectly normal
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function deleteCustomItem(listKey, id){
+    if(!customItems[listKey]) return;
+    customItems[listKey] = customItems[listKey].filter(it => it.id !== id);
+    scheduleSave();
+    renderAll();
+  }
+
+  function applyOverride(item){
+    const ov = itemOverrides[item.id];
+    if(!ov) return item;
+    return {
+      ...item,
+      name: ov.name !== undefined ? ov.name : item.name,
+      body: ov.body !== undefined ? ov.body : item.body,
+      link: ov.link !== undefined ? ov.link : item.link,
+    };
+  }
+
+  // Applies any saved custom order to a list of items for one group.
+  function applyOrder(items, orderKey){
+    const saved = itemOrder[orderKey];
+    if(!saved || !saved.length) return items;
+    const pos = new Map(saved.map((id,i)=>[id,i]));
+    return [...items].sort((a,b)=>{
+      const pa = pos.has(a.id) ? pos.get(a.id) : Infinity;
+      const pb = pos.has(b.id) ? pos.get(b.id) : Infinity;
+      return pa - pb;
+    });
+  }
+
+  /* ============================================================
+     RENDER ENGINE
+  ============================================================ */
+  function tagHTML(tags){
+    if(!tags) return '';
+    return tags.map(t=>`<span class="tag ${t.cls}">${t.label}</span>`).join(' ');
+  }
+
+  function itemHTML(rawItem, key){
+    const item = rawItem.custom ? rawItem : applyOverride(rawItem);
+    const meta = item.meta ? `<p class="meta">${item.meta}</p>` : '';
+    // Only your own additions get a delete button in this book — built-in entries are
+    // added or removed by editing the source directly when you tell me to, since that's
+    // the only kind of change guaranteed to survive future edits to this artifact.
+    const actionBtn = item.custom
+      ? `<button class="delete-btn" title="Ta bort permanent" data-action="delete-custom" data-list="${key}" data-id="${item.id}">🗑</button>`
+      : '';
+    const customBadge = item.custom ? `<span class="custom-badge">Ditt tillägg</span>` : '';
+    // Links removed by request — names always render as plain text now, never wrapped in <a>.
+    const heading = escapeHtml(item.name);
+
+    return `<div class="item" data-id="${item.id}">
+      ${actionBtn}
+      <h5>${heading} ${tagHTML(item.tags)} ${customBadge}</h5>
+      ${item.body}
+      ${meta}
+    </div>`;
+  }
+
+  function renderAll(){
+    document.querySelectorAll('.render-list').forEach(el=>{
+      const key = el.dataset.list;
+      const data = DATA[key];
+      if(!data) return;
+      let html = '';
+      data.groups.forEach((group, groupIdx)=>{
+        const orderKey = key + '::g' + groupIdx;
+        const visibleItems = applyOrder(group.items, orderKey);
+        const titleOverrideKey = 'grouptitle-' + orderKey;
+        const groupTitle = staticOverrides[titleOverrideKey] !== undefined ? staticOverrides[titleOverrideKey] : group.title;
+        if(group.title && visibleItems.length){
+          html += `<div class="section-head"><h4>${groupTitle}</h4></div>`;
+        }
+        visibleItems.forEach(it=>{ html += itemHTML(it, key); });
+      });
+      const mine = customItems[key] || [];
+      if(mine.length){
+        html += `<div class="section-head"><h4>Dina tillägg</h4></div>`;
+        mine.forEach(it=>{ html += itemHTML(it, key); });
+      }
+      el.innerHTML = html;
+    });
+  }
+
+  document.body.addEventListener('click', (e)=>{
+    if(e.target && e.target.id === 'retrySaveBtn'){
+      attemptSave(saveToken);
+    }
+  });
+
+  /* ============================================================
+     GLOBAL EVENT DELEGATION for dynamically-rendered cards
+     (delete-custom buttons are injected via innerHTML, so we bind ONE listener
+     here instead of inline onclick="" attributes — inline handlers can be
+     silently blocked by stricter CSPs in embedded contexts.)
+  ============================================================ */
+  document.body.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-action]');
+    if(!btn || btn.disabled) return;
+    const action = btn.dataset.action;
+    if(action === 'delete-custom'){
+      deleteCustomItem(btn.dataset.list, btn.dataset.id);
+    }
+  });
+
+  // Applies any text edits made in a now-removed earlier version of this book
+  // (stored under book-state from before) so nothing you'd already changed reverts.
+  function applyStaticOverridesToDOM(){
+    document.querySelectorAll('[data-static-id]').forEach(el=>{
+      if(el.dataset.staticId.startsWith('grouptitle-')) return;
+      const saved = staticOverrides[el.dataset.staticId];
+      if(saved !== undefined) el.innerHTML = saved;
+    });
+  }
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  (async function init(){
+    await loadState();
+    applyStaticOverridesToDOM();
+    renderAll();
+  })();
+</script>
+
+</body>
+</html>
